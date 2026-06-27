@@ -1,26 +1,28 @@
 import pandas as pd
 
-df = pd.read_csv("data/mutual_funds.csv")
+def run_query(df, query):
 
-query = input("Enter query: ")
+    conditions = query.split(" AND ")
 
-column, operator, value = query.split(maxsplit=2)
+    result = df
 
-try:
-    value = float(value)
+    for condition in conditions:
 
-    if operator == ">":
-        result = df[df[column] > value]
+        column, operator, value = condition.split(maxsplit=2)
 
-    elif operator == "<":
-        result = df[df[column] < value]
+        if operator == ">":
+            result = result[result[column] > float(value)]
 
-    elif operator == "==":
-        result = df[df[column] == value]
+        elif operator == "<":
+            result = result[result[column] < float(value)]
 
-except ValueError:
+        elif operator == "==":
 
-    if operator == "==":
-        result = df[df[column] == value]
+            try:
+                value = float(value)
+                result = result[result[column] == value]
 
-print(result)
+            except ValueError:
+                result = result[result[column] == value]
+
+    return result
