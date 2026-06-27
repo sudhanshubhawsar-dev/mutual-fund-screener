@@ -1,7 +1,8 @@
 import pandas as pd
 
 def run_query(df, query):
-
+    
+    supported_operators = ["==", ">", "<"]
     conditions = query.split(" AND ")
 
     result = df
@@ -9,6 +10,13 @@ def run_query(df, query):
     for condition in conditions:
 
         column, operator, value = condition.split(maxsplit=2)
+        if column not in df.columns:
+            print(f"Error: Column '{column}' does not exist")
+            return None
+
+        if operator not in supported_operators:
+            print(f"Error: Operator '{operator}' is not supported")
+            return None
 
         if operator == ">":
             result = result[result[column] > float(value)]
